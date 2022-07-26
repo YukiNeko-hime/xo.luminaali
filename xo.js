@@ -256,7 +256,7 @@ class AI {
   }
   
   _MarksInLine(n, coord) {
-    const player = this._board.GetMark(coord);
+    const opponent = this._board.GetMark(coord);
     
     let free = [];
     for (let i=n; i<5; i++) {
@@ -270,7 +270,7 @@ class AI {
       let test = [...coord];
       for (let x=0; x<5; x++) {
         test[i] = x;
-        if (this._board.GetMark(test) == player) {
+        if (this._board.GetMark(test) == opponent) {
           MiL += 1
         } else if (this._board.GetMark(test) == 0) {
           empty.push([...test])
@@ -292,7 +292,7 @@ class AI {
         if (coord[i] == coord[j]) {
           for (let x=0; x<5; x++) {
             test[i] = test[j] = x;
-            if (this._board.GetMark(test) == player) {
+            if (this._board.GetMark(test) == opponent) {
               MiL += 1
             } else if (this._board.GetMark(test) == 0) {
               empty.push([...test])
@@ -311,7 +311,7 @@ class AI {
           for (let x=0; x<5; x++) {
             test[i] = x;
             test[j] = 4 - x;
-            if (this._board.GetMark(test) == player) {
+            if (this._board.GetMark(test) == opponent) {
               MiL += 1
             } else if (this._board.GetMark(test) == 0) {
               empty.push([...test])
@@ -348,7 +348,7 @@ class AI {
                   test[j] = parX[p1];
                   test[k] = parX[p2];
                   
-                  if (this._board.GetMark(test) == player) {
+                  if (this._board.GetMark(test) == opponent) {
                     MiL += 1
                   } else if (this._board.GetMark(test) == 0) {
                     empty.push([...test])
@@ -392,7 +392,7 @@ class AI {
                       test[k] = parX[p2];
                       test[l] = parX[p3];
                       
-                      if (this._board.GetMark(test) == player) {
+                      if (this._board.GetMark(test) == opponent) {
                         MiL += 1
                       } else if (this._board.GetMark(test) == 0) {
                         empty.push([...test])
@@ -460,12 +460,19 @@ class GUI {
     this._gameOn = true;
     this._board = new Board();
     this._boardCanvas = new BoardCanvas();
-    this._ai = new AI(this._board);
+    this._ai = [new AI(this._board), new AI(this._board)];
+    this._currentAI = 0;
     this._lastMoves = [null, null];
+    this._interval = null;
+    this._timeout = null;
+    this._turnDelay = 1000;
+    this._gameDelay = 10000;
   }
   
   Init() {
-    this._boardCanvas.Reset()
+    this._boardCanvas.Reset();
+    let self = this;
+    this._interval = setInterval( function(){self._AdvanceAITurn()}, this._turnDelay );
   }
   
   _GetCoordinatesFromPoint(evt) {
@@ -492,22 +499,32 @@ class GUI {
   }
   
   OnClick(evt) {
-    if (this._gameOn) {
+    if (this._hasPlayer && this._gameOn) {
       let coord = this._GetCoordinatesFromPoint(evt);
       if (coord) {
         this._AdvanceTurns(coord);
       }
     } else {
+      this._hasPlayer = true;
+      this._gameOn = false;
+      clearTimeout(this._timeout);
+      clearInterval(this._interval);
       this.Reset();
-      this._gameOn = true;
     }
   }
   
   Reset() {
-    this._ai.Reset();
+    this._ai[0].Reset();
+    this._ai[1].Reset();
     this._board.Reset();
     this._boardCanvas.Reset()
     this._lastMoves = [null, null];
+    this._gameOn = true;
+    
+    if (!this._hasPlayer) {
+      let self = this;
+      this._interval = setInterval( function(){self._AdvanceAITurn()}, this._turnDelay );
+    }
   }
   
   _MakeMove(coord, player, op) {
@@ -543,8 +560,21 @@ class GUI {
     this._MakeMove(coord, 1, 2);
     
     // ai turn
-    let aicoord = this._ai.NextMove(coord);
+    let aicoord = this._ai[0].NextMove(coord);
     this._MakeMove(aicoord, 2, 1);
+  }
+  
+  _AdvanceAITurn() {
+    if (this._gameOn) {
+      const id = this._currentAI;
+      let coord = this._ai[id].NextMove(this._lastMoves[(id+1)%2]);
+      this._MakeMove(coord, id+1, (id+1)%2+1);
+      this._currentAI = (id+1)%2;
+    } else {
+      clearInterval(this._interval);
+      let self = this;
+      this._timeout = setTimeout( function(){self.Reset()}, this._gameDelay);
+    }
   }
 }
 
