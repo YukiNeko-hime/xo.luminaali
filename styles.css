@@ -1,0 +1,15 @@
+html {
+}
+
+body {
+  background-color: darkslateblue;
+  color: #222222;
+}
+
+canvas#xo {
+  visibility: visible;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+}
