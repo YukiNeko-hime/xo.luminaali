@@ -16,7 +16,7 @@ class Board {
     }
   }
   
-  Clear() {
+  Reset() {
     for (let i=0; i<5; i++) {
       for (let j=0; j<5; j++) {
         for (let k=0; k<5; k++) {
@@ -243,8 +243,11 @@ class Board {
 class AI {
   constructor(board) {
     this._board = board;
-    
     this._lastMove = null;
+  }
+  
+  Reset() {
+    this._lastMove = null
   }
   
   _RandomChoice(moves) {
@@ -462,17 +465,18 @@ class GUI {
   }
   
   Init() {
-    this._boardCanvas.Clear()
+    this._boardCanvas.Reset()
   }
   
-  OnClick(evt) {
+  _GetCoordinatesFromPoint(evt) {
     let canvas = document.getElementById('xo');
     const left = canvas.offsetLeft + canvas.clientLeft - canvas.width/2;
     const top = canvas.offsetTop + canvas.clientTop - canvas.height/2;
     
-    const x = event.pageX - left;
-    const y = event.pageY - top;
+    const x = evt.pageX - left;
+    const y = evt.pageY - top;
     
+    let coord = null;
     if ( (34 < x && x < 685) && (34 < y && y < 685) ) {
       const i = Math.floor((y - 34)/131.0),
           j = Math.floor((x - 34)/131.0),
@@ -480,15 +484,30 @@ class GUI {
           l = Math.floor((x - 34 - j*131)/22.0);
       
       if (k < 5 && l < 5) {
-        let coord = [i,j,k,l];
+        coord = [i,j,k,l];
+      }
+    }
+    
+    return coord
+  }
+  
+  OnClick(evt) {
+    if (this._gameOn) {
+      let coord = this._GetCoordinatesFromPoint(evt);
+      if (coord) {
         this._AdvanceTurns(coord);
       }
+    } else {
+      this.Reset();
+      this._gameOn = true;
     }
   }
   
-  Clear() {
-    this._board.Clear();
-    this._boardCanvas.Clear()
+  Reset() {
+    this._ai.Reset();
+    this._board.Reset();
+    this._boardCanvas.Reset()
+    this._lastMoves = [null, null];
   }
   
   _MakeMove(coord, player, op) {
@@ -520,10 +539,6 @@ class GUI {
   }
   
   _AdvanceTurns(coord) {
-      if (! this._gameOn) {
-        return
-      }
-      
     // human turn
     this._MakeMove(coord, 1, 2);
     
@@ -552,7 +567,7 @@ class BoardCanvas {
     this._oHigh.src = 'resource/O_high.png';
   }
   
-  Clear() {
+  Reset() {
     let ctx = document.getElementById('xo').getContext("2d");
     ctx.drawImage(this._board, 0, 0);
   }
