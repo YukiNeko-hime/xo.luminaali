@@ -28,6 +28,16 @@ class Board {
     }
   }
   
+  IsFree(coord) {
+    const [i,j,k,l] = coord;
+    
+    if (this._board[i][j][k][l] == 0) {
+      return true
+    } else {
+      return false
+    }
+  }
+  
   SetMark(coord, player) {
     const [i,j,k,l] = coord;
     
@@ -501,7 +511,7 @@ class GUI {
   OnClick(evt) {
     if (this._hasPlayer && this._gameOn) {
       let coord = this._GetCoordinatesFromPoint(evt);
-      if (coord) {
+      if (coord && this._board.IsFree(coord)) {
         this._AdvanceTurns(coord);
       }
     } else {
