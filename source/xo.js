@@ -487,8 +487,8 @@ class GUI {
   
   _GetCoordinatesFromPoint(evt) {
     let canvas = document.getElementById('xo');
-    const left = canvas.offsetLeft + canvas.clientLeft - canvas.width/2;
-    const top = canvas.offsetTop + canvas.clientTop - canvas.height/2;
+    const left = canvas.offsetLeft;
+    const top = canvas.offsetTop;
     
     const x = evt.pageX - left;
     const y = evt.pageY - top;
@@ -636,11 +636,10 @@ class BoardCanvas {
 
 var gui = new GUI();
 
-function test() {
+function runGame() {
   let canvas = document.getElementById('xo');
   gui.Init();
   canvas.addEventListener('click', function(evt) {gui.OnClick(evt)});
-  //setInterval(function(){gui.Clear()}, 1000);
 }
 
-window.onload = test;
+window.onload = runGame;

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>LumiNaali - 4D XO - The Source</title>
+  <meta name="description" content="Source code for the 4D XO game.">
+  
+  <!-- Opengraph description of the page. -->
+  <meta property="og:title" content="LumiNaali - 4D XO - The Source">
+  <meta property="description" content="Source code for the 4D XO game.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="LumiNaali">
+  <meta property="og:url" content="http://luminaali.net/source">
+  
+  <link rel="stylesheet" type="text/css" href="../styles.css">
+</head>
+<body>
+  <div class="content-wrapper">
+    <div id="content">
+      <h1>The Source</h1>
+      <div id="source">
+        <script type="text/javascript">
+          function onSourceLoad(evt) {
+            let source = evt.srcElement.responseText;
+            let lines = source.split(/\r?\n|\r|\n/g);
+            
+            let i = 0
+            while ( i < lines.length ) {
+              let lineno = '<div class="lineno">' + i + '</div>';
+              let code = '<div class="code">' + lines[i] + '</div>'
+              let line = '<div class="code-line">' + lineno + code + '</div>'
+              document.getElementById('source').innerHTML += line;
+              i++
+            }
+          }
+          
+          var xhr = new XMLHttpRequest();
+          xhr.addEventListener('load', onSourceLoad)
+          xhr.open('GET', '/source/xo.js');
+          xhr.send();
+        </script>
+      </div>
+      <div class="link-row"><a href="/" class="nav-link">Back</a></div>
+    </div>
+  </div>
+</body>
+</html>

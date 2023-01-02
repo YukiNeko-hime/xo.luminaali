@@ -1,15 +1,123 @@
 html {
+  height: 100%;
 }
 
 body {
   background-color: darkslateblue;
-  color: #222222;
+  color: antiquewhite;
+  display: flex;
+  height: 100%;
+  margin: 0;
+  align-items: center;
+}
+
+a,
+a:visited {
+  color: deeppink;
+  text-decoration: none;
+}
+
+p {
+  text-indent: 20px;
+  margin: 0;
+}
+
+p:first-child {
+  text-indent: 0;
+}
+
+h1 {
+  margin-top: 0;
+  text-align: center;
+}
+
+div#game {
+  height: 700px;
+  margin: auto;
+  width: 700px;
 }
 
 canvas#xo {
-  visibility: visible;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
+  left: 0px;
+  top: 0px;
+  position: relative;
+}
+
+div.centered{
+  display: inline-block;
+  margin: auto;
+  width: 100%;
+}
+
+div.content-wrapper{
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+div#content {
+  border: 2px dashed;
+  border-radius: 20px;
+  display: grid;
+  grid-auto-rows: max-content auto max-content;
+  max-height: 100%;
+  margin: 10px auto;
+  padding: 20px;
+  width: 810px;
+}
+
+div.body-text {
+  margin: 15px auto;
+  width: 700px;
+}
+
+div.story {
+  font-size: 12pt;
+  font-style: italic;
+}
+
+div#source {
+  background-color: black;
+  border: 2px solid;
+  border-radius: 2px;
+  overflow: scroll;
+  padding: 20px 5px 20px 5px;
+  width: 800px;
+}
+
+div.code-line {
+  display: block;
+  font-family: monospace, monospace;
+  width: 1200px;
+}
+
+div.lineno {
+  border-right: 1px solid;
+  display: inline-block;
+  margin-right: 5px;
+  padding-right: 5px;
+  text-align: right;
+  width: 30px;
+}
+
+div.code {
+  display: inline-block;
+  white-space: pre;
+}
+
+.link-row {
+  display: inline-block;
+  margin-top: 5px;
+  text-align: center;
+  width: 100%;
+}
+
+.nav-link {
+  font-size: 15pt;
+  font-weight: bold;
+  margin-right: 20px;
+}
+
+.nav-link:last-child {
+  margin-right: 0px;
 }
