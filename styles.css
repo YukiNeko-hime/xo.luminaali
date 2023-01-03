@@ -6,6 +6,7 @@ body {
   background-color: darkslateblue;
   color: antiquewhite;
   display: flex;
+  font-family: sans-serif;
   height: 100%;
   margin: 0;
   align-items: center;
@@ -27,6 +28,7 @@ p:first-child {
 }
 
 h1 {
+  font-family: serif;
   margin-top: 0;
   text-align: center;
 }
@@ -116,6 +118,11 @@ div.code {
   font-size: 15pt;
   font-weight: bold;
   margin-right: 20px;
+  text-shadow: 2px 2px 0 black,
+                       -1px -1px 0 black,
+                       -1px 1px 0 black,
+                       1px -1px 0 black,
+                       1px 1px 0 black;
 }
 
 .nav-link:last-child {
